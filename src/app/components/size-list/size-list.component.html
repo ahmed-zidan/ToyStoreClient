@@ -1,0 +1,17 @@
+<div class="sidebar_section">
+  <div class="sidebar_title">
+    <h2>Sizes</h2>
+  </div>
+  @if(sizes){
+  <ul class="checkboxes">
+    @for (item of sizes; track $index) {
+      @if(activeSizes.includes(item.id) == true){
+        <li (click)="changeSize(item.id)" class="active"><i class="fa fa-square" aria-hidden="true"></i><span>{{item.name}}</span></li>
+      }@else {
+        <li (click)="changeSize(item.id)"><i class="fa fa-square-o" aria-hidden="true"></i><span>{{item.name}}</span></li>
+      }
+    }
+
+  </ul>
+}
+</div>

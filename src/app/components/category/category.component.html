@@ -1,4 +1,6 @@
+
 <div class="container product_section_container" style="margin-top: 160px;">
+
   <div class="row">
     <div class="col product_section clearfix">
 
@@ -15,19 +17,7 @@
       <!-- Sidebar -->
 
 				<div class="sidebar">
-					<div class="sidebar_section">
-						<div class="sidebar_title">
-							<h2>Product Category</h2>
-						</div>
-						<ul class="sidebar_categories">
-							<li><a href="#">Men</a></li>
-							<li class="active"><a href="#"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>Women</a></li>
-							<li><a href="#">Accessories</a></li>
-							<li><a href="#">New Arrivals</a></li>
-							<li><a href="#">Collection</a></li>
-							<li><a href="#">Shop</a></li>
-						</ul>
-					</div>
+          			<app-category-list [activeCatId] = "this.activeCatId"></app-category-list>
 
 					<!-- Price Range Filtering -->
 					<div class="sidebar_section">
@@ -42,41 +32,9 @@
 					</div>
 
 					<!-- Sizes -->
-					<div class="sidebar_section">
-						<div class="sidebar_title">
-							<h2>Sizes</h2>
-						</div>
-						<ul class="checkboxes">
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>S</span></li>
-							<li class="active"><i class="fa fa-square" aria-hidden="true"></i><span>M</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>L</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>XL</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>XXL</span></li>
-						</ul>
-					</div>
-
+          <app-size-list (outSize)="sizeChanged($event)"></app-size-list>
 					<!-- Color -->
-					<div class="sidebar_section">
-						<div class="sidebar_title">
-							<h2>Color</h2>
-						</div>
-						<ul class="checkboxes">
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>Black</span></li>
-							<li class="active"><i class="fa fa-square" aria-hidden="true"></i><span>Pink</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>White</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>Blue</span></li>
-							<li><i class="fa fa-square-o" aria-hidden="true"></i><span>Orange</span></li>
-						</ul>
-						<div class="show_more">
-							<span><span>+</span>Show More</span>
-						</div>
-					</div>
+        <app-color-list (outColor)="colorChanged($event)"></app-color-list>
 
 				</div>
 

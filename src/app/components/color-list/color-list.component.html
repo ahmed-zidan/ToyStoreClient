@@ -1,0 +1,21 @@
+
+<div class="sidebar_section">
+  <div class="sidebar_title">
+    <h2>Color</h2>
+  </div>
+  @if(colors){
+  <ul class="checkboxes">
+    @for (item of colors; track $index) {
+        @if(activeColor.includes(item.id)){
+          <li (click)="colorChanged(item.id)" class="active"><i class="fa fa-square" aria-hidden="true"></i><span>{{item.name}}</span></li>
+        }@else {
+          <li (click)="colorChanged(item.id)"><i class="fa fa-square-o" aria-hidden="true"></i><span>{{item.name}}</span></li>
+        }
+    }
+  </ul>
+  <div class="show_more">
+    <span><span>+</span>Show More</span>
+  </div>
+}
+
+</div>

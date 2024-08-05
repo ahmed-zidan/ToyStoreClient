@@ -6,5 +6,6 @@ export const routes: Routes = [
   {path:"" , component:HomeComponent},
   {path:"home" , component:HomeComponent},
   {path:"category/:id" , component:CategoryComponent},
+  {path:"category" , component:CategoryComponent},
   {path:"**" , component:HomeComponent}
 ];
