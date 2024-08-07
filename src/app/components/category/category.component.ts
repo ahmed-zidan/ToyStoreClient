@@ -1,13 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { afterNextRender, afterRender, AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ProductService } from '../../services/product.service';
-import { CategoryService } from '../../services/category.service';
 import { Category } from '../../Models/Category';
-import { Product } from '../../Models/Product';
-import { ActivatedRoute } from '@angular/router';
+import { Pagination, Product } from '../../Models/Product';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryListComponent } from '../category-list/category-list.component';
 import { ColorListComponent } from '../color-list/color-list.component';
 import { SizeListComponent } from '../size-list/size-list.component';
+import { filter, map } from 'rxjs';
 
+declare var jQuery:any;
+//declare var Isotope: any;
+declare function loadGrid():void;
+import Isotope from 'isotope-layout';
+import { FormsModule, NgModel } from '@angular/forms';
 @Component({
   selector: 'app-category',
   standalone: true,
@@ -15,31 +20,56 @@ import { SizeListComponent } from '../size-list/size-list.component';
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })
-export class CategoryComponent implements OnInit {
+export class CategoryComponent implements OnInit{
+  private isotope!: Isotope;
   categories!:Category[];
+  pagination!:Pagination;
   Product!:Product;
   activeCatId = 0;
-  searchStr:string = "";
-  sorting:string= "";
-  pageIdx:number = 0;
-  pageSize:number=10;
-  Sizes:number[] = [];
-  colors:number[]=[];
-
-  constructor(private productService:ProductService,private router:ActivatedRoute){
+  doAfterRender = 0;
+  constructor(private productService:ProductService,private activeRouter:ActivatedRoute ){
+    afterRender(()=>{
+      if(this.doAfterRender){
+        const grid = document.getElementsByClassName("product-grid")[0] as HTMLElement;
+        this.isotope = new Isotope(grid, {
+          itemSelector: '.product-item',
+          //layoutMode: 'fitRows',
+          filter:'*',
+        });
+        this.doAfterRender = 0;
+      }
+    })
 
   }
+
+
   ngOnInit(): void {
-    let catId = this.router.snapshot.paramMap.get("id");
-    if(catId)
-      this.activeCatId = Number.parseInt(catId);
-    this.productService.getProducts().subscribe({
+   this.activeRouter.paramMap
+      .pipe(map(() => window.history.state)).subscribe({
+        next:res=>{
+          this.activeCatId = res.Id;
+        }
+      })
+    this.pagination = {categoryId:this.activeCatId,colors:[],sizes:[],pageIdx:0,pageSize:10,search:'',sorting:''};
+    this.productService.getProducts(this.pagination).subscribe({
       next:res=>{
         this.Product = res as Product;
+        //console.log(this.Product)
         this.loadScript('../assets/js/categories_custom.js');
       }
     })
+   //this.refreshProducts();
   }
+
+  refreshProducts(){
+    this.productService.getProducts(this.pagination).subscribe({
+      next:res=>{
+        this.Product = res as Product;
+        this.doAfterRender = 1;
+      }
+    })
+  }
+
 
   public loadScript(url: string) {
     const body = <HTMLDivElement> document.body;
@@ -51,11 +81,30 @@ export class CategoryComponent implements OnInit {
     body.appendChild(script);
   }
   sizeChanged(sizeEvent:number[]){
-
+    this.pagination.sizes = sizeEvent;
+    this.refreshProducts();
   }
 
   colorChanged(colorEvent:number[]){
+    this.pagination.colors = colorEvent;
+    this.refreshProducts();
+  }
 
+
+  changeCategory(categoryEvent:number){
+    this.pagination.categoryId = categoryEvent;
+    this.refreshProducts();
+  }
+
+  onPageIndedxClick(pageSize:number){
+      if(this.pagination.pageSize > pageSize){
+      console.log('this.pagination.pageSize > pageSize')
+
+    }else{
+      console.log('this.pagination.pageSize < pageSize')
+      this.pagination.pageSize = pageSize;
+      this.refreshProducts();
+    }
   }
 
 

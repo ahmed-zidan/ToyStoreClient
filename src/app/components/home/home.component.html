@@ -24,7 +24,7 @@
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url('{{item.image}}')">
 						<div class="banner_category">
-							<a routerLink="category/{{item.id}}">{{item.name}}</a>
+							<a (click)="goToCategory(item.id)" style="cursor:pointer;">{{item.name}}</a>
 						</div>
 					</div>
 				</div>

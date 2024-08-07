@@ -5,10 +5,9 @@
   <ul class="sidebar_categories">
     @for (item of categories; track $index) {
       @if(activeCatId == item.id){
-        <li class="active"><a style="cursor:pointer;" (click)="this.activeCatId = item.id"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>{{item.name}}</a></li>
-
+        <li class="active"><a style="cursor:pointer;" (click)="changeCategory(item.id)"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>{{item.name}}</a></li>
       }@else {
-        <li><a style="cursor:pointer;" (click)="this.activeCatId = item.id">{{item.name}}</a></li>
+        <li class="cat_btn"><a style="cursor:pointer;" (click)="changeCategory(item.id)">{{item.name}}</a></li>
       }
     }
   </ul>

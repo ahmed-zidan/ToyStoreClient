@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HomeServiceService } from '../../services/home-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { HomeData } from '../../Models/HomeData';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +13,7 @@ import { RouterLink } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   homeData!:HomeData;
-constructor(private homeService:HomeServiceService , private toast:ToastrService){
+constructor(private homeService:HomeServiceService , private toast:ToastrService , private router:Router){
 
 }
   ngOnInit(): void {
@@ -22,6 +22,10 @@ constructor(private homeService:HomeServiceService , private toast:ToastrService
         this.homeData = res as HomeData;
       }
     })
+  }
+
+  goToCategory(id:number){
+    this.router.navigateByUrl('/category', { state: { Id: id } })
   }
 
 }

@@ -14,8 +14,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         if(error.status === 401){
           router.navigate(['/home']);
         }
-        if(error.error.message){
+        if(error.error && error.error.message){
           toast.error(error.error.message , 'error');
+        }else{
+          toast.error(error.message , 'error');
         }
       }
       return throwError(error);

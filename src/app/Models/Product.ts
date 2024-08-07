@@ -14,3 +14,14 @@ export interface ProductItem {
   categoryName: string
   imageUrl: string
 }
+
+
+export interface Pagination {
+  categoryId: number
+  search: string
+  sorting: string
+  pageIdx: number
+  pageSize: number
+  sizes: number[]
+  colors: number[]
+}

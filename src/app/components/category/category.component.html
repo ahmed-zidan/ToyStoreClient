@@ -17,7 +17,7 @@
       <!-- Sidebar -->
 
 				<div class="sidebar">
-          			<app-category-list [activeCatId] = "this.activeCatId"></app-category-list>
+          			<app-category-list [activeCatId] = "this.activeCatId" (outCategoty)="changeCategory($event)"></app-category-list>
 
 					<!-- Price Range Filtering -->
 					<div class="sidebar_section">
@@ -120,10 +120,9 @@
 											<span class="num_sorting_text">04</span>
 											<i class="fa fa-angle-down"></i>
 											<ul class="sorting_num p-0">
-												<li class="num_sorting_btn"><span>01</span></li>
-												<li class="num_sorting_btn"><span>02</span></li>
-												<li class="num_sorting_btn"><span>03</span></li>
-												<li class="num_sorting_btn"><span>04</span></li>
+                        @for (item of [1,2,3,4]; track $index) {
+												<li (click)="onPageIndedxClick(item)" class="num_sorting_btn"><span>0{{item}}</span></li>
+                      }
 											</ul>
 										</li>
 									</ul>
