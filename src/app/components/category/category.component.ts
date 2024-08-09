@@ -8,20 +8,30 @@ import { ColorListComponent } from '../color-list/color-list.component';
 import { SizeListComponent } from '../size-list/size-list.component';
 import { filter, map } from 'rxjs';
 
-declare var jQuery:any;
+//declare var jQuery:any;
 //declare var Isotope: any;
-declare function loadGrid():void;
+
 import Isotope from 'isotope-layout';
-import { FormsModule, NgModel } from '@angular/forms';
+import { animate, style, transition, trigger } from '@angular/animations';
 @Component({
   selector: 'app-category',
   standalone: true,
   imports: [CategoryListComponent,ColorListComponent , SizeListComponent],
   templateUrl: './category.component.html',
-  styleUrl: './category.component.css'
+  styleUrl: './category.component.css',
+  animations: [
+    trigger('itemAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.5)' }),
+        animate('0.2s ease-out', style({ opacity: 1, transform: 'scale(1)' }))
+      ]),
+      transition(':leave', [
+        animate('0.2s ease-in', style({ opacity: 0, transform: 'scale(0.5)' }))
+      ])
+    ])
+  ]
 })
 export class CategoryComponent implements OnInit{
-  private isotope!: Isotope;
   categories!:Category[];
   pagination!:Pagination;
   Product!:Product;
@@ -31,30 +41,33 @@ export class CategoryComponent implements OnInit{
     afterRender(()=>{
       if(this.doAfterRender){
         const grid = document.getElementsByClassName("product-grid")[0] as HTMLElement;
-        this.isotope = new Isotope(grid, {
+        let isotope = new Isotope(grid, {
           itemSelector: '.product-item',
-          //layoutMode: 'fitRows',
-          filter:'*',
         });
+        isotope.arrange({filter:'*',layoutMode: 'fitRows',transitionDuration: '3s',sortBy:"price"});
+
         this.doAfterRender = 0;
       }
+
     })
 
   }
 
 
   ngOnInit(): void {
+
    this.activeRouter.paramMap
       .pipe(map(() => window.history.state)).subscribe({
         next:res=>{
           this.activeCatId = res.Id;
         }
       })
-    this.pagination = {categoryId:this.activeCatId,colors:[],sizes:[],pageIdx:0,pageSize:10,search:'',sorting:''};
+    this.pagination = {categoryId:this.activeCatId,colors:[],sizes:[],pageIdx:0,pageSize:10,search:'',sorting:'',minPrice:0,maxPrice:580};
     this.productService.getProducts(this.pagination).subscribe({
       next:res=>{
         this.Product = res as Product;
-        //console.log(this.Product)
+        console.log(res);
+        console.log(this.Product)
         this.loadScript('../assets/js/categories_custom.js');
       }
     })
@@ -97,15 +110,40 @@ export class CategoryComponent implements OnInit{
   }
 
   onPageIndedxClick(pageSize:number){
-      if(this.pagination.pageSize > pageSize){
-      console.log('this.pagination.pageSize > pageSize')
-
-    }else{
       console.log('this.pagination.pageSize < pageSize')
       this.pagination.pageSize = pageSize;
       this.refreshProducts();
-    }
   }
 
+
+  priceChanged(ammount:string){
+
+    var priceMin =parseFloat(ammount.split('-')[0].replace('$', ''));
+    var priceMax = parseFloat(ammount.split('-')[1].replace('$', ''));
+    this.pagination.minPrice = priceMin;
+    this.pagination.maxPrice = priceMax;
+    this.refreshProducts();
+  }
+
+  changeSort(sort:string){
+    this.pagination.sorting = sort;
+    this.refreshProducts();
+  }
+
+
+  nextPage(){
+    this.pagination.pageIdx+=1;
+    this.refreshProducts();
+  }
+
+  getPaginationList(){
+    let start = this.Product.pageNumber-5>0?this.Product.pageNumber-5:this.Product.pageNumber;
+    let end = this.Product.pageNumber+5<this.Product.pageCount?this.Product.pageNumber+5:this.Product.pageCount;
+    let pageList = [];
+    for(let i = start+1;i<end;i++){
+      pageList.push(i);
+    }
+    return pageList;
+  }
 
 }
