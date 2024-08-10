@@ -1,7 +1,7 @@
 import { afterNextRender, afterRender, AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Category } from '../../Models/Category';
-import { Pagination, Product } from '../../Models/Product';
+import { Pagination, Product, ProductItem } from '../../Models/Product';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoryListComponent } from '../category-list/category-list.component';
 import { ColorListComponent } from '../color-list/color-list.component';
@@ -13,6 +13,9 @@ import { filter, map } from 'rxjs';
 
 import Isotope from 'isotope-layout';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { BasketService } from '../../services/basket.service';
+import { IBasket } from '../../Models/Basket';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-category',
   standalone: true,
@@ -37,7 +40,9 @@ export class CategoryComponent implements OnInit{
   Product!:Product;
   activeCatId = 0;
   doAfterRender = 0;
-  constructor(private productService:ProductService,private activeRouter:ActivatedRoute ){
+  constructor(private productService:ProductService,private activeRouter:ActivatedRoute,private basket:BasketService,
+    private toasService:ToastrService
+   ){
     afterRender(()=>{
       if(this.doAfterRender){
         const grid = document.getElementsByClassName("product-grid")[0] as HTMLElement;
@@ -50,7 +55,6 @@ export class CategoryComponent implements OnInit{
       }
 
     })
-
   }
 
 
@@ -144,6 +148,32 @@ export class CategoryComponent implements OnInit{
       pageList.push(i);
     }
     return pageList;
+  }
+
+  addToCart(item:ProductItem){
+    let basketItem ={
+      id:item.id,
+      productName:item.name,
+      price:item.sellPrice,
+      quantity:1,
+      pictureUrl:item.imageUrl,
+      categoryId:item.categotyId,
+      categoryName:item.categoryName
+    }
+
+    this.basket.getBasket().subscribe({
+      next:res=>{
+        let basketData = res as IBasket;
+        console.log(res);
+        basketData.basketItem.push(basketItem);
+        this.basket.updateBasket(basketData).subscribe({
+          next:res=>{
+            this.basket._basket.set(basketData);
+            this.toasService.success("Success" , "Added To Cart Successfully");
+          }
+        })
+      }
+    })
   }
 
 }
