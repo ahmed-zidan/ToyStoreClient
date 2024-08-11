@@ -1,16 +1,12 @@
-import { afterNextRender, afterRender, AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { afterRender, Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { Category } from '../../Models/Category';
 import { Pagination, Product, ProductItem } from '../../Models/Product';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CategoryListComponent } from '../category-list/category-list.component';
 import { ColorListComponent } from '../color-list/color-list.component';
 import { SizeListComponent } from '../size-list/size-list.component';
-import { filter, map } from 'rxjs';
-
-//declare var jQuery:any;
-//declare var Isotope: any;
-
+import { map } from 'rxjs';
 import Isotope from 'isotope-layout';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { BasketService } from '../../services/basket.service';
@@ -19,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CategoryListComponent,ColorListComponent , SizeListComponent],
+  imports: [CategoryListComponent,ColorListComponent , SizeListComponent,RouterLink],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css',
   animations: [
@@ -44,6 +40,7 @@ export class CategoryComponent implements OnInit{
     private toasService:ToastrService
    ){
     afterRender(()=>{
+
       if(this.doAfterRender){
         const grid = document.getElementsByClassName("product-grid")[0] as HTMLElement;
         let isotope = new Isotope(grid, {
@@ -70,8 +67,7 @@ export class CategoryComponent implements OnInit{
     this.productService.getProducts(this.pagination).subscribe({
       next:res=>{
         this.Product = res as Product;
-        console.log(res);
-        console.log(this.Product)
+        console.log(222222222);
         this.loadScript('../assets/js/categories_custom.js');
       }
     })

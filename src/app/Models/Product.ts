@@ -16,6 +16,8 @@ export interface ProductItem {
   categotyId: number
   categoryName: string
   imageUrl: string
+  sizes:Size[]
+  colors:Color[]
 }
 
 
@@ -29,4 +31,17 @@ export interface Pagination {
   minPrice: number
   sizes: number[]
   colors: number[]
+}
+
+
+
+export interface Color{
+  id:number;
+  name:string;
+  colorCode:string;
+}
+
+export interface Size{
+  id:number;
+  name:string;
 }

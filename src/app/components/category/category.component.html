@@ -102,7 +102,7 @@
 
 									<!-- Product 1 -->
                   @for (item of Product.products; track $index) {
-									<div class="product-item men" @itemAnimation>
+									<div class="product-item men" routerLink="/product/{{item.id}}" @itemAnimation>
 										<div class="product discount product_filter">
 											<div class="product_image">
 												<img src="{{item.imageUrl}}" style="height: 257px;" alt="">

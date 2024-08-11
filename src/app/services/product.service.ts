@@ -13,4 +13,8 @@ export class ProductService {
   getProducts(pagination:Pagination){
     return this.http.post(environment.apiUrl + "Product/getAllProducts",pagination)
   }
+
+  getProduct(id:string){
+    return this.http.get(environment.apiUrl + "Product/getProduct/"+id)
+  }
 }

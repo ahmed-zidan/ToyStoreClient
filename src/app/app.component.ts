@@ -6,11 +6,12 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { BasketService } from './services/basket.service';
 import { IBasket } from './Models/Basket';
+import { BenefitComponent } from "./components/benefit/benefit.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,NavComponent,FooterComponent,NgxSpinnerModule],
+  imports: [RouterOutlet, NavComponent, FooterComponent, NgxSpinnerModule, BenefitComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   animations: [
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    console.log(111111111);
     this.basketService.getBasket().subscribe({
       next:res=>{
         this.basketService._basket.set(res as IBasket);
